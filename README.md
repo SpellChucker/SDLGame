@@ -1,4 +1,4 @@
-https://travis-ci.org/SpellChucker/SDLGame.svg?branch=master
+[![Build Status](https://travis-ci.org/SpellChucker/SDLGame.svg?branch=master)](https://travis-ci.org/SpellChucker/SDLGame)
 
 Attempting to create a game in SDL2.
 
