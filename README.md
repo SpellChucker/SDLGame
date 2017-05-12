@@ -2,7 +2,7 @@
 
 Attempting to create a game in SDL2.
 
-To build, ensure you have `SDL2` and `SDL2_image` installed then perform the following:
+To build, ensure you have `SDL2`, `SDL2_image`, `SDL2_ttf` installed then perform the following:
 
 ```
 $ mkdir build && cd build
