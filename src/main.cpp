@@ -64,6 +64,20 @@ void renderTexture(SDL_Texture* texture, SDL_Renderer* renderer, int x, int y, i
 }
 
 /**
+ * Render the texture to a renderer to a specific location preserving the width/height.
+ *
+ * @param texture The source texture we want to draw
+ * @param renderer The renderer we want to draw the texture to
+ * @param x The X coordinate to draw to
+ * @param y The Y coordinate to draw to
+ */
+void renderTexture(SDL_Texture* texture, SDL_Renderer* renderer, int x, int y) {
+  int width, height;
+  SDL_QueryTexture(texture, NULL, NULL, &width, &height);
+  renderTexture(texture, renderer, x, y, width, height);
+}
+
+/**
  * Where it all begins.
  */
 int main(int, char**) {
@@ -109,15 +123,28 @@ int main(int, char**) {
     return 1;
   }
 
-  renderTexture(loadedTexture, renderer, 352, 164, 320, 400);
+  SDL_Event event;
+  bool quit = false;
 
-  SDL_RenderPresent(renderer);
+  while (!quit) {
+    while (SDL_PollEvent(&event)) {
+      if (event.type == SDL_QUIT) {
+        quit = true;
+      }
+    }
 
-  SDL_Delay(2000);
+    SDL_RenderClear(renderer);
+    renderTexture(loadedTexture, renderer, 352, 164);
+    SDL_RenderPresent(renderer);
+  }
+
+  SDL_DestroyTexture(loadedTexture);
 
   SDL_DestroyRenderer(renderer);
 
   SDL_DestroyWindow(window);
+
+  IMG_Quit();
 
   SDL_Quit();
 
