@@ -2,6 +2,7 @@
 #include <string>
 #include <SDL.h>
 #include <SDL_image.h>
+#include "window.h"
 
 std::string getResourcePath(const std::string &subDir = "") {
 #ifdef _WIN32
@@ -81,27 +82,21 @@ void renderTexture(SDL_Texture* texture, SDL_Renderer* renderer, int x, int y) {
  * Where it all begins.
  */
 int main(int, char**) {
-  // Keep a reference to our window.
-  SDL_Window* window = NULL;
-
-  // Screate a screen surface which we'll use to store the window's surface.
-  SDL_Surface* screenSurface = NULL;
-
-  // Create our renderer.
-  SDL_Renderer* renderer = NULL;
-
   // Initialize SDL's video.
   if (SDL_Init(SDL_INIT_VIDEO) != 0){
     printf("SDL could not be initialized. SDL_Error: %s\n", SDL_GetError());
     return 1;
   }
 
-  // Create our window.
-  window = SDL_CreateWindow("First Window", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1024, 728, SDL_WINDOW_SHOWN);
-  if (window == NULL) {
-    printf("Window could not be created. SDL_Error: %s\n", SDL_GetError());
-    return 1;
-  }
+  Window* windowObject = new Window("First Window", 1024, 728);
+
+  SDL_Window* window = windowObject->getSDLWindow();
+
+  // Screate a screen surface which we'll use to store the window's surface.
+  SDL_Surface* screenSurface = NULL;
+
+  // Create our renderer.
+  SDL_Renderer* renderer = NULL;
 
   // Create our renderer.
   renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
