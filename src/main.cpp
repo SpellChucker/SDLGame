@@ -38,7 +38,7 @@ std::string getResourcePath(const std::string &subDir = "") {
 SDL_Texture* loadTexture(const std::string &file, SDL_Renderer* renderer) {
   SDL_Texture *texture = IMG_LoadTexture(renderer, file.c_str());
 
-  if (texture == nullptr) {
+  if (texture == NULL) {
     printf("Could not load image. SDL_Error: %s\n", SDL_GetError());
   }
 
@@ -92,9 +92,6 @@ int main(int, char**) {
 
   SDL_Window* window = windowObject->getSDLWindow();
 
-  // Screate a screen surface which we'll use to store the window's surface.
-  SDL_Surface* screenSurface = NULL;
-
   // Create our renderer.
   SDL_Renderer* renderer = NULL;
 
@@ -105,13 +102,10 @@ int main(int, char**) {
     printf("Renderer could not be created. SDL_Error: %s\n", SDL_GetError());
   }
 
-  // Store our surface.
-  screenSurface = SDL_GetWindowSurface(window);
-
   std::string imageFile = getResourcePath() + "pete_penguin.png";
   SDL_Texture *loadedTexture = loadTexture(imageFile, renderer);
 
-  if (loadedTexture == nullptr) {
+  if (loadedTexture == NULL) {
     printf("Unable to load texture. SDL_Error: %s\n", SDL_GetError());
     IMG_Quit();
     SDL_Quit();
