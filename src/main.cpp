@@ -93,14 +93,7 @@ int main(int, char**) {
   SDL_Window* window = windowObject->getSDLWindow();
 
   // Create our renderer.
-  SDL_Renderer* renderer = NULL;
-
-  // Create our renderer.
-  renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-  if (renderer == NULL) {
-    SDL_DestroyWindow(window);
-    printf("Renderer could not be created. SDL_Error: %s\n", SDL_GetError());
-  }
+  SDL_Renderer* renderer = windowObject->getRenderer();
 
   std::string imageFile = getResourcePath() + "pete_penguin.png";
   SDL_Texture *loadedTexture = loadTexture(imageFile, renderer);

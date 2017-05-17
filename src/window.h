@@ -12,10 +12,15 @@ class Window {
     ~Window();
 
     SDL_Window* getSDLWindow();
+
+    SDL_Renderer* getRenderer();
   protected:
 
   private:
     SDL_Window* window;
+    SDL_Renderer* renderer;
+
+    void setTitle(const std::string &title);
 
     int width;
     int height;
