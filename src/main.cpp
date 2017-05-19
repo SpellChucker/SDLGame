@@ -2,6 +2,7 @@
 #include <string>
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
 #include "window.h"
 
 std::string getResourcePath(const std::string &subDir = "") {
@@ -79,6 +80,43 @@ void renderTexture(SDL_Texture* texture, SDL_Renderer* renderer, int x, int y) {
 }
 
 /**
+ * Render text to a texture.
+ *
+ * @param message The message to render
+ * @param font The font file to use
+ * @param color The color of the text we want
+ * @param size The size of the font we want
+ * @param renderer The renderer we want to render the text to
+ * @return an SDL_Texture containing the font message
+ */
+SDL_Texture* renderText(const std::string message, const std::string fontFile, SDL_Color color, int size, SDL_Renderer* renderer) {
+  TTF_Font* font = TTF_OpenFont(fontFile.c_str(), size);
+
+  if (font == NULL) {
+    printf("Could not open font: %s. SDL_Error: %s", fontFile.c_str(), SDL_GetError());
+    return NULL;
+  }
+
+  SDL_Surface* surface = TTF_RenderText_Blended(font, message.c_str(), color);
+  if (surface == NULL) {
+    TTF_CloseFont(font);
+    printf("Could not render font. SDL_Error: %s", SDL_GetError());
+    return NULL;
+  }
+
+  SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+  if (texture == NULL) {
+    printf("Could not create texture. SDL_Error: %s", SDL_GetError());
+    return NULL;
+  }
+
+  SDL_FreeSurface(surface);
+  TTF_CloseFont(font);
+
+  return texture;
+}
+
+/**
  * Where it all begins.
  */
 int main(int, char**) {
@@ -105,6 +143,29 @@ int main(int, char**) {
     return 1;
   }
 
+  if (TTF_Init() != 0) {
+    printf("Unable to initialize TTF library. SDL_Error: %s", SDL_GetError());
+    SDL_Quit();
+    return 1;
+  }
+
+  SDL_Color color = { 255, 255, 255, 255 };
+  std::string fontFile = getResourcePath() + "Raleway-Regular.ttf";
+  SDL_Texture* image = renderText("Testing!", fontFile, color, 64, renderer);
+
+  if (image == NULL) {
+    printf("Unable to render message. SDL_Error: %s", SDL_GetError());
+    TTF_Quit();
+    SDL_Quit();
+    return 1;
+  }
+
+  int imageWidth, imageHeight;
+
+  SDL_QueryTexture(image, NULL, NULL, &imageWidth, &imageHeight);
+  int x = 1024 / 2 - imageWidth / 2;
+  int y = 728 / 4 - imageHeight / 2;
+
   SDL_Event event;
   bool quit = false;
 
@@ -117,6 +178,7 @@ int main(int, char**) {
 
     SDL_RenderClear(renderer);
     renderTexture(loadedTexture, renderer, 352, 164);
+    renderTexture(image, renderer, x, y);
     SDL_RenderPresent(renderer);
   }
 
